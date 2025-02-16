@@ -1,11 +1,12 @@
-MyProject - Dockerized PHP & MySQL Application
+# MyProject - Dockerized PHP & MySQL Application
 
-Overview
+## Overview
 
-This guide will walk you through setting up a simple Dockerized PHP & MySQL application using docker-compose and nginx.
+This guide will walk you through setting up a simple Dockerized PHP & MySQL application using `docker-compose` and `nginx`.
 
-Project Structure
+### Project Structure
 
+```
 myproject/
 │── docker-compose.yml
 │── nginx/
@@ -14,21 +15,22 @@ myproject/
 │   └── Dockerfile
 │── www/
 │   └── index.php
+```
 
-Prerequisites
+## Prerequisites
 
 Ensure you have the following installed on your system:
 
-Docker
+- Docker
+- Docker Compose
 
-Docker Compose
+## Configuration Details
 
-Configuration Details
-
-1. docker-compose.yml
+### 1. `docker-compose.yml`
 
 This file defines the services for our application.
 
+```yaml
 version: '3.8'
 
 services:
@@ -77,38 +79,37 @@ volumes:
 
 networks:
   app_network:
+```
 
-Explanation:
+### Explanation:
 
-nginx: Acts as the web server, serving PHP files via FastCGI.
+- **nginx**: Acts as the web server, serving PHP files via FastCGI.
+- **php**: A container running PHP-FPM to execute PHP scripts.
+- **mysql**: A MySQL database container.
+- **Volumes**: Persist MySQL data even if the container is restarted.
+- **Networks**: Ensures communication between services.
 
-php: A container running PHP-FPM to execute PHP scripts.
-
-mysql: A MySQL database container.
-
-Volumes: Persist MySQL data even if the container is restarted.
-
-Networks: Ensures communication between services.
-
-2. php/Dockerfile
+### 2. `php/Dockerfile`
 
 This file defines how the PHP container is built.
 
+```dockerfile
 FROM php:8.2-fpm
 
 # Install required PHP extensions  
 RUN docker-php-ext-install pdo pdo_mysql mysqli
+```
 
-Explanation:
+### Explanation:
 
-Uses php:8.2-fpm as the base image.
+- Uses `php:8.2-fpm` as the base image.
+- Installs necessary PHP extensions (`pdo`, `pdo_mysql`, `mysqli`).
 
-Installs necessary PHP extensions (pdo, pdo_mysql, mysqli).
-
-3. nginx/default.conf
+### 3. `nginx/default.conf`
 
 This file configures the Nginx web server.
 
+```nginx
 server {
     listen 80;
     server_name localhost;
@@ -130,19 +131,19 @@ server {
         deny all;
     }
 }
+```
 
-Explanation:
+### Explanation:
 
-Serves files from /var/www/html.
+- Serves files from `/var/www/html`.
+- Passes `.php` files to the PHP-FPM container (`php:9000`).
+- Denies access to hidden files (e.g., `.htaccess`).
 
-Passes .php files to the PHP-FPM container (php:9000).
-
-Denies access to hidden files (e.g., .htaccess).
-
-4. www/index.php
+### 4. `www/index.php`
 
 A basic PHP script to test MySQL connectivity.
 
+```php
 <?php
 $servername = "mysql";
 $username = "user";
@@ -158,31 +159,37 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully to MySQL!";
 ?>
+```
 
-Explanation:
+### Explanation:
 
-Connects to the MySQL container using environment variables from docker-compose.yml.
+- Connects to the MySQL container using environment variables from `docker-compose.yml`.
+- Displays a success message if the connection is successful.
 
-Displays a success message if the connection is successful.
+## Running the Application
 
-Running the Application
+1. Navigate to the project directory:
+   ```sh
+   cd myproject
+   ```
+2. Build and start the containers:
+   ```sh
+   docker-compose up -d
+   ```
+3. Access the application in your browser at:
+   ```
+   http://localhost:8080
+   ```
+4. To stop the containers:
+   ```sh
+   docker-compose down
+   ```
 
-Navigate to the project directory:
-
-cd myproject
-
-Build and start the containers:
-
-docker-compose up -d
-
-Access the application in your browser at:
-
-http://localhost:8080
-
-To stop the containers:
-
-docker-compose down
-
-Conclusion
+## Conclusion
 
 This setup provides a simple yet functional PHP development environment using Docker. You can extend it by adding additional services such as Redis, PostgreSQL, or even integrating a frontend framework.
+
+---
+
+For any issues or improvements, feel free to cte or raise an issue!
+
