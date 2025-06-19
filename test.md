@@ -1,43 +1,38 @@
+# Westend Validator Node via Docker
 
-# 🐳 Westend Validator Node via Docker
+This guide explains how to run a Polkadot Westend validator node using Docker.
 
-This repository provides a quick-start guide to running a **Polkadot Westend validator node** using Docker.
-
-Westend is the official **testnet for Polkadot**, perfect for learning how to validate without risking real funds.
-
----
-
-## 🚀 Quickstart
-
-### ✅ Requirements
-
-- Docker installed ([Install guide](https://docs.docker.com/get-docker/))
-- At least **4 CPU cores**, **8GB RAM**, and **100GB+ SSD**
-- Westend test tokens (WND) — available from the faucet (see below)
+Westend is the official testnet of Polkadot, ideal for practicing staking and validation.
 
 ---
 
-## 📦 Step 1: Pull the Polkadot Docker Image
+## Requirements
 
-```bash
+- Docker installed: https://docs.docker.com/get-docker/
+- At least 4 CPU cores, 8 GB RAM, and 100+ GB SSD
+- A Westend account with WND tokens (from the faucet)
+
+---
+
+## Step 1: Pull the Polkadot Docker image
+
+```
 docker pull parity/polkadot:latest
-
-> You can replace latest with a specific version, e.g. parity/polkadot:v1.16.1
-
-
-
+```
 
 ---
 
-🗃️ Step 2: Create a Data Volume
+## Step 2: Create a persistent data directory
 
+```
 mkdir -p $HOME/westend-data
-
+```
 
 ---
 
-⚙️ Step 3: Run the Node
+## Step 3: Start the validator node
 
+```
 docker run -d \
   --name westend-validator \
   -v $HOME/westend-data:/polkadot-data \
@@ -55,105 +50,77 @@ docker run -d \
   --unsafe-rpc-external \
   --ws-external \
   --rpc-external
+```
 
-> Modify "MyWestendValidator" to your own validator name.
-
-
-
+Change `"MyWestendValidator"` to your preferred validator name.
 
 ---
 
-🔑 Step 4: Generate Session Keys
+## Step 4: Generate session keys
 
-Option 1: Using CLI inside the container
+Enter the container:
 
+```
 docker exec -it westend-validator /bin/bash
+```
+
+Then generate keys:
+
+```
 polkadot key generate --scheme sr25519
+```
 
-Save these keys to be used on-chain when registering your validator.
-
-Option 2: Use Polkadot-JS UI
-
-1. Go to https://polkadot.js.org/apps
-
-
-2. Switch to Westend
-
-
-3. Use the Developer → "Extrinsics" section to set session keys
-
-
-
+Save the output securely — you will register these keys on-chain.
 
 ---
 
-💰 Step 5: Get Westend Test Tokens
+## Step 5: Get Westend tokens (WND)
 
-Join the Westend Faucet Matrix room: 👉 #westend_faucet:matrix.org
+Join the faucet chat on Matrix:  
+https://matrix.to/#/#westend_faucet:matrix.org
 
-Then request tokens by typing:
+Then request tokens:
 
+```
 !drip YOUR_WESTEND_ADDRESS
-
+```
 
 ---
 
-🗳️ Step 6: Register as a Validator
+## Step 6: Register your validator
 
-1. Visit https://polkadot.js.org/apps
-
-
-2. Switch to Westend
-
-
-3. Navigate to Staking → Account Actions
-
-
+1. Open https://polkadot.js.org/apps
+2. Switch to the Westend network
+3. Go to "Staking" → "Account Actions"
 4. Bond tokens
-
-
 5. Set session keys
-
-
-6. Click Validate
-
-
-
+6. Click "Validate"
 
 ---
 
-📡 Step 7: Monitor Your Node
+## Step 7: Monitor your node
 
-View your node on telemetry: 🔗 Westend Telemetry Dashboard
-
+View telemetry here:  
+https://telemetry.polkadot.io/#/Westend
 
 ---
 
-🧼 Useful Docker Commands
+## Docker commands
 
 Stop the node:
 
+```
 docker stop westend-validator
+```
 
 Remove the container:
 
+```
 docker rm westend-validator
-
-
----
-
-📄 License
-
-MIT License
-
+```
 
 ---
 
-🙋 Need Help?
+## License
 
-Open an issue or reach out via Polkadot Discord.
-
----
-
-Would you like me to create a full GitHub repo with this structure (`README.md`, maybe a `docker-compose.yml`, `.env`, etc.) as a downloadable `.zip` or ready for push?
-
+MIT
